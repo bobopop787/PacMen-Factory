@@ -8,10 +8,20 @@
 
 <body>
     <div id='game'>
-        <button onclick='makeOne()' width='200' height='30'>Add PacMan</button>
-        <div id='startButton'>
-            <button onclick='update()' width='200' height='30'>Start Game</button>
-        </div>
+    </div>
+    <div id = "make">
+        <button onclick='makePacmen()' width='200' height='30'>Add 1 PacMan</button>
+        <button onclick='makePacmen(5)' width='200' height='30'>Add 5 PacMen</button>
+        <button onclick='makePacmen(10)' width='200' height='30'>Add 10 PacMen</button>
+    </div>
+    <div id = "remove">
+        <button onclick='removePacmen()' width='200' height='30'>Remove 1 PacMan</button>
+        <button onclick='removePacmen(5)' width='200' height='30'>Remove 5 PacMen</button>
+        <button onclick='removePacmen(10)' width='200' height='30'>Remove 10 PacMen</button>
+    </div>
+    <div id = "start">
+        <button id='startButton' onclick='update()' width='200' height='30'>Start Game</button>
+        <button onclick='clearPacmen()' width='200' height='30'>Clear Pacmen</button>
     </div>
 </body>
 
