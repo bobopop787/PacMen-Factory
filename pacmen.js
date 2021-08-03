@@ -1,12 +1,11 @@
-let pos = 0;
-const pacArray = [
+const pacImgs = [
   ['./images/PacMan1.png', './images/PacMan2.png'],
   ['./images/PacMan3.png', './images/PacMan4.png'],
 ];
-let direction = 0;
 const pacMen = []; // This array holds all the pacmen
 
 let isRunning = false;
+let interval;
 
 // This function returns an object with random values
 function setToRandom(isAboslute, xs, ys = xs) {
@@ -28,7 +27,7 @@ function makePac() {
   let speed = setToRandom(false, 10); // {x:?, y:?}
   let velocity = speed;
   let position = setToRandom(true, window.innerWidth - 100, window.innerHeight - 100);
-  let openMouth = true;
+  let openMouth = (Math.random() < 0.5) ? true : false;
   let counter = 0;
 
   // Add image to div id = game
@@ -36,9 +35,12 @@ function makePac() {
   let newimg = document.createElement('img');
   newimg.id = `pacman${pacMen.length + 1}`;
   newimg.style.position = 'absolute';
-  newimg.src = './images/PacMan1.png';
+  newimg.src = speed.x > 0 ?
+    (openMouth ? pacImgs[0][0] : pacImgs[0][1]) :
+    (openMouth ? pacImgs[1][0] : pacImgs[1][1]);
   newimg.width = 100;
   newimg.height = 100;
+  newimg.style.zIndex = -1;
 
   // DONE set position here
   newimg.style.left = position.x;
@@ -60,11 +62,14 @@ function makePac() {
 
 function update() {
   if(isRunning) {
+    clearInterval(interval);
+    document.getElementById('startButton').innerHTML = "Start game";
+    isRunning = false;
     return;
   }
   isRunning = true;
   // loop over pacmen array and move each one and move image in DOM
-  setInterval(() => {
+  interval = setInterval(() => {
     pacMen.forEach((item) => {
       checkCollisions(item);
       item.position.x += item.velocity.x;
@@ -74,7 +79,7 @@ function update() {
       item.newimg.style.top = item.position.y;
     });
   }, 20);
-  document.getElementById('startButton').innerHTML = "Game started!";
+  document.getElementById('startButton').innerHTML = "Pause game";
 }
 
 function checkCollisions(item) {
@@ -119,21 +124,41 @@ function checkCollisions(item) {
 
   if(item.openMouth) {
     if(item.velocity.x > 0) {
-      item.newimg.src = './images/PacMan1.png';
+      item.newimg.src = pacImgs[0][0];
     } else {
-      item.newimg.src = './images/PacMan3.png';
+      item.newimg.src = pacImgs[1][0];
     }
   } else {
     if(item.velocity.x > 0) {
-      item.newimg.src = './images/PacMan2.png';
+      item.newimg.src = pacImgs[0][1];
     } else {
-      item.newimg.src = './images/PacMan4.png';
+      item.newimg.src = pacImgs[1][1];
     }
   }
 }
 
-function makeOne() {
-  pacMen.push(makePac()); // add a new PacMan
+function makePacmen(amount = 1) {
+  for(let i = 0; i < amount; i++) {
+    pacMen.push(makePac()); // add a new PacMan
+    console.log("hi");
+  }
+}
+
+function removePacmen(amount = 1) {
+  console.log(pacMen);
+  for(let i = 0; i < amount; i++) {
+    let lastElement = document.getElementById(`pacman${pacMen.length}`);
+    if(lastElement === null) {
+      break;
+    }
+    lastElement.parentElement.removeChild(lastElement);
+    pacMen.pop();
+  }
+}
+
+function clearPacmen() {
+  pacMen.splice(0, pacMen.length);
+  document.getElementById("game").innerHTML = "";
 }
 
 //don't change this line
